@@ -475,12 +475,62 @@
     });
 
     // CANCELLAZIONE ARTICOLO
-    async function deletePost(id) {
-      const token = localStorage.getItem('gh_blog_token');
-      if (!token) return alert("Non autorizzato.");
+    // CANCELLAZIONE ARTICOLO CORRETTA
+async function deletePost(id) {
+  const token = localStorage.getItem('gh_blog_token');
+  if (!token) return alert("Non autorizzato. Premi CTRL+SHIFT+A per autenticarti.");
 
-      if (!confirm("Sei sicuro di voler cancellare questo articolo definitivamente?")) return;
+  if (!confirm("Vuoi davvero eliminare definitivamente questo articolo?")) return;
 
+  try {
+    // 1. Recupera l'ultima versione del file direttamente da GitHub API (bypassa la cache del browser)
+    const fileRes = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}?ref=main`, {
+      headers: { 
+        Authorization: `token ${token}`,
+        'Accept': 'application/vnd.github.v3+json'
+      }
+    });
+
+    if (!fileRes.ok) throw new Error("Impossibile recuperare il file posts.json da GitHub.");
+
+    const fileData = await fileRes.json();
+    let posts = JSON.parse(decodeURIComponent(escape(atob(fileData.content))));
+
+    // 2. Filtro flessibile (converte entrambi a stringa per evitare mismatch numero/stringa)
+    const originalLength = posts.length;
+    posts = posts.filter(item => String(item.id) !== String(id));
+
+    if (posts.length === originalLength) {
+      alert("Post non trovato nell'elenco su GitHub.");
+      return;
+    }
+
+    // 3. Esegue il commit della nuova lista senza il post
+    const updateRes = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`, {
+      method: 'PUT',
+      headers: { 
+        Authorization: `token ${token}`, 
+        'Content-Type': 'application/json' 
+      },
+      body: JSON.stringify({
+        message: `Rimosso post ID: ${id}`,
+        content: btoa(unescape(encodeURIComponent(JSON.stringify(posts, null, 2)))),
+        sha: fileData.sha
+      })
+    });
+
+    if (!updateRes.ok) throw new Error("Errore durante l'aggiornamento su GitHub.");
+
+    // 4. Aggiorna immediatamente l'interfaccia locale senza aspettare la CDN di GitHub
+    allPosts = posts;
+    renderPosts('all');
+    alert("Articolo rimosso con successo!");
+
+  } catch (err) {
+    alert("Errore eliminazione: " + err.message);
+  }
+}
+    
       try {
         const fileRes = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`, {
           headers: { Authorization: `token ${token}` }
