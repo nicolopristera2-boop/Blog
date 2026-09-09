@@ -3,25 +3,23 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hub & Logbook</title>
-  
-  <!-- Font Google: Inter (corpo) + Syne (titoli display dal look moderno/tech) -->
+  <title>LOGBOOK — Tech, Video & Notes</title>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --bg: #090d14;
-      --card-bg: rgba(22, 27, 39, 0.7);
-      --card-border: rgba(255, 255, 255, 0.08);
-      --card-hover-border: rgba(249, 115, 22, 0.4);
-      --text-main: #f1f5f9;
+      --bg: #0b0f17;
+      --card-bg: rgba(18, 24, 38, 0.75);
+      --card-border: rgba(255, 255, 255, 0.07);
+      --card-border-hover: rgba(249, 115, 22, 0.45);
+      --text-main: #f8fafc;
       --text-muted: #94a3b8;
-      --accent: #f97316; /* Arancio ambra studio */
+      --accent: #f97316;
       --accent-glow: rgba(249, 115, 22, 0.15);
-      --badge-bg: rgba(255, 255, 255, 0.05);
-      --transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      --badge-bg: rgba(15, 23, 42, 0.85);
     }
 
     * {
@@ -32,98 +30,105 @@
 
     body {
       background-color: var(--bg);
-      /* Sfumatura di fondo sottile per dare profondità */
       background-image: 
-        radial-gradient(circle at 50% 0%, rgba(249, 115, 22, 0.08) 0%, transparent 50%),
-        radial-gradient(circle at 10% 20%, rgba(56, 189, 248, 0.04) 0%, transparent 40%);
+        radial-gradient(ellipse 60% 40% at 50% 0%, rgba(249, 115, 22, 0.07), transparent 70%),
+        radial-gradient(circle at 100% 100%, rgba(56, 189, 248, 0.03), transparent 50%);
       background-attachment: fixed;
       color: var(--text-main);
       font-family: 'Inter', system-ui, sans-serif;
       line-height: 1.5;
-      -webkit-font-smoothing: antialiased;
       padding-bottom: 5rem;
     }
 
-    /* Container centrale */
     .container {
-      max-width: 1100px;
+      max-width: 1120px;
       margin: 0 auto;
       padding: 0 1.5rem;
     }
 
     /* HEADER */
     header {
-      padding: 2.5rem 0 1.5rem;
-      border-bottom: 1px solid var(--card-border);
       position: sticky;
       top: 0;
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      background: rgba(9, 13, 20, 0.85);
       z-index: 100;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      background: rgba(11, 15, 23, 0.82);
+      border-bottom: 1px solid var(--card-border);
+      padding: 1rem 0;
     }
 
-    .nav-wrapper {
+    .nav-bar {
       display: grid;
       grid-template-columns: 1fr auto 1fr;
       align-items: center;
     }
 
-    .title-area {
-      grid-column: 2;
+    .brand-mark {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 0.95rem;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .brand-mark:hover { color: var(--text-main); }
+    .brand-mark span { color: var(--accent); }
+
+    .title-center {
       text-align: center;
     }
 
-    .brand-title {
+    .site-title {
       font-family: 'Syne', sans-serif;
-      font-size: 1.6rem;
-      letter-spacing: -0.5px;
+      font-size: 1.5rem;
       font-weight: 800;
-      background: linear-gradient(180deg, #ffffff 40%, #94a3b8 100%);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      background: linear-gradient(180deg, #ffffff 30%, #94a3b8 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      text-transform: uppercase;
     }
 
-    .brand-subtitle {
-      font-size: 0.8rem;
+    .site-tagline {
+      font-size: 0.72rem;
       color: var(--text-muted);
-      letter-spacing: 1.5px;
+      letter-spacing: 2px;
       text-transform: uppercase;
-      margin-top: -2px;
+      margin-top: 2px;
     }
 
-    /* MENU PROFILO / CV / PORTFOLIO */
-    .profile-section {
-      grid-column: 3;
+    /* MENU PROFILO (CV / PORTFOLIO) */
+    .profile-wrap {
       justify-self: end;
       position: relative;
     }
 
-    .profile-btn {
+    .profile-toggle {
       display: flex;
       align-items: center;
-      gap: 0.6rem;
-      background: var(--badge-bg);
+      gap: 0.55rem;
+      background: rgba(255, 255, 255, 0.04);
       border: 1px solid var(--card-border);
-      padding: 0.4rem 0.8rem 0.4rem 0.5rem;
-      border-radius: 40px;
+      padding: 0.35rem 0.75rem 0.35rem 0.4rem;
+      border-radius: 999px;
       color: var(--text-main);
       cursor: pointer;
       font-family: inherit;
       font-size: 0.85rem;
       font-weight: 500;
-      transition: var(--transition);
+      transition: all 0.2s ease;
     }
 
-    .profile-btn:hover, .profile-btn[aria-expanded="true"] {
+    .profile-toggle:hover, .profile-toggle[aria-expanded="true"] {
       border-color: var(--accent);
-      background: rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.07);
     }
 
-    .avatar-icon {
-      width: 28px;
-      height: 28px;
+    .avatar-badge {
+      width: 26px;
+      height: 26px;
       border-radius: 50%;
       background: linear-gradient(135deg, var(--accent), #e11d48);
       display: flex;
@@ -134,88 +139,77 @@
       color: #fff;
     }
 
-    .chevron {
-      transition: transform 0.2s ease;
-      stroke: var(--text-muted);
-    }
-    .profile-btn[aria-expanded="true"] .chevron {
-      transform: rotate(180deg);
-    }
-
-    /* Dropdown UI */
-    .dropdown {
+    .dropdown-box {
       position: absolute;
-      top: calc(100% + 10px);
+      top: calc(100% + 8px);
       right: 0;
       width: 230px;
-      background: #111622;
+      background: #111726;
       border: 1px solid var(--card-border);
-      border-radius: 14px;
-      padding: 0.5rem;
-      box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.7);
+      border-radius: 12px;
+      padding: 0.4rem;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.55);
       opacity: 0;
       visibility: hidden;
-      transform: translateY(-8px);
-      transition: var(--transition);
+      transform: translateY(-6px);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    .dropdown.active {
+    .dropdown-box.open {
       opacity: 1;
       visibility: visible;
       transform: translateY(0);
     }
 
-    .dropdown-link {
+    .dropdown-item {
       display: flex;
       flex-direction: column;
       gap: 2px;
-      padding: 0.7rem 0.9rem;
-      border-radius: 10px;
+      padding: 0.65rem 0.85rem;
+      border-radius: 8px;
       text-decoration: none;
       color: var(--text-main);
-      font-size: 0.88rem;
+      font-size: 0.85rem;
       font-weight: 500;
       transition: background 0.15s;
     }
 
-    .dropdown-link span.hint {
-      font-size: 0.75rem;
+    .dropdown-item .subtext {
+      font-size: 0.72rem;
       color: var(--text-muted);
       font-weight: 400;
     }
 
-    .dropdown-link:hover {
-      background: rgba(255, 255, 255, 0.06);
+    .dropdown-item:hover {
+      background: rgba(255, 255, 255, 0.05);
     }
-
-    .dropdown-link:hover span.title {
+    .dropdown-item:hover .item-title {
       color: var(--accent);
     }
 
-    /* FILTRI CATEGORIA */
-    .filter-bar {
+    /* FILTRI CATEGORIE */
+    .filter-wrapper {
       display: flex;
-      align-items: center;
       justify-content: center;
       gap: 0.5rem;
-      padding: 2rem 0 1.5rem;
+      padding: 2.2rem 0 1.8rem;
       overflow-x: auto;
       scrollbar-width: none;
     }
-    .filter-bar::-webkit-scrollbar { display: none; }
+    .filter-wrapper::-webkit-scrollbar { display: none; }
 
     .filter-btn {
-      background: transparent;
+      background: rgba(255, 255, 255, 0.03);
       border: 1px solid var(--card-border);
       color: var(--text-muted);
-      padding: 0.45rem 1.1rem;
-      border-radius: 30px;
-      font-size: 0.85rem;
+      padding: 0.4rem 1rem;
+      border-radius: 999px;
+      font-size: 0.82rem;
       font-family: inherit;
       font-weight: 500;
       cursor: pointer;
       white-space: nowrap;
-      transition: var(--transition);
+      transition: all 0.2s ease;
     }
 
     .filter-btn:hover {
@@ -225,15 +219,15 @@
 
     .filter-btn.active {
       background: var(--text-main);
-      color: #090d14;
+      color: #0b0f17;
       border-color: var(--text-main);
       font-weight: 600;
     }
 
     /* GRIGLIA ARTICOLI */
-    .articles-grid {
+    .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
       gap: 1.75rem;
     }
 
@@ -241,34 +235,31 @@
     .card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
-      border-radius: 16px;
+      border-radius: 14px;
       overflow: hidden;
       display: flex;
       flex-direction: column;
       text-decoration: none;
       color: inherit;
-      transition: var(--transition);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .card:hover {
       transform: translateY(-4px);
-      border-color: var(--card-hover-border);
-      box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.6), 0 0 20px -5px var(--accent-glow);
+      border-color: var(--card-border-hover);
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.5), 0 0 25px var(--accent-glow);
     }
 
-    /* Media Wrapper */
-    .card-media {
+    .card-cover {
       position: relative;
       width: 100%;
-      padding-top: 56.25%; /* Ratio 16:9 cinematografico */
-      background: #0f131a;
+      padding-top: 56.25%; /* 16:9 */
+      background: #070a0e;
       overflow: hidden;
     }
 
-    .card-media img, 
-    .card-media iframe {
+    .card-cover iframe,
+    .card-cover img {
       position: absolute;
       top: 0;
       left: 0;
@@ -279,226 +270,198 @@
       transition: transform 0.4s ease;
     }
 
-    .card:hover .card-media img {
-      transform: scale(1.04);
+    .card:hover .card-cover img {
+      transform: scale(1.03);
     }
 
-    /* Badge Tipologia/Durata sopra il Media */
-    .media-badge {
+    .tag-badge {
       position: absolute;
-      bottom: 12px;
-      right: 12px;
-      background: rgba(0, 0, 0, 0.75);
-      backdrop-filter: blur(6px);
-      padding: 0.25rem 0.6rem;
+      bottom: 10px;
+      right: 10px;
+      background: var(--badge-bg);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 0.22rem 0.55rem;
       border-radius: 6px;
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       font-weight: 600;
-      color: #fff;
-      display: flex;
-      align-items: center;
-      gap: 4px;
+      color: var(--text-main);
       z-index: 2;
     }
 
-    /* Contenuto Card */
-    .card-body {
-      padding: 1.4rem;
+    .card-content {
+      padding: 1.3rem;
       display: flex;
       flex-direction: column;
       flex-grow: 1;
     }
 
-    .card-meta {
+    .meta-line {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      margin-bottom: 0.75rem;
-      font-size: 0.8rem;
+      font-size: 0.75rem;
+      margin-bottom: 0.6rem;
     }
 
-    .category-tag {
+    .cat-name {
       color: var(--accent);
       font-weight: 600;
       text-transform: uppercase;
-      font-size: 0.72rem;
       letter-spacing: 0.5px;
     }
 
-    .card-date {
+    .post-date {
       color: var(--text-muted);
     }
 
-    .card-title {
-      font-size: 1.2rem;
+    .post-title {
+      font-size: 1.15rem;
       font-weight: 600;
-      margin-bottom: 0.6rem;
-      line-height: 1.35;
+      line-height: 1.4;
+      margin-bottom: 0.55rem;
       color: var(--text-main);
-      transition: color 0.15s ease;
+      transition: color 0.15s;
     }
 
-    .card:hover .card-title {
+    .card:hover .post-title {
       color: var(--accent);
     }
 
-    .card-excerpt {
-      font-size: 0.9rem;
+    .post-excerpt {
+      font-size: 0.88rem;
       color: var(--text-muted);
       line-height: 1.5;
-      margin-bottom: 1.25rem;
+      margin-bottom: 1.2rem;
       flex-grow: 1;
     }
 
-    .card-footer {
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      padding-top: 0.75rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    .card-action {
       font-size: 0.8rem;
-      color: var(--text-muted);
-    }
-
-    .read-more {
       font-weight: 500;
+      color: var(--text-main);
       display: flex;
       align-items: center;
       gap: 4px;
-      color: var(--text-main);
+      padding-top: 0.7rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
     }
 
-    /* Responsive */
     @media (max-width: 640px) {
-      .nav-wrapper {
-        grid-template-columns: 1fr auto;
-      }
-      .title-area {
-        grid-column: 1;
-        text-align: left;
-      }
-      .profile-section {
-        grid-column: 2;
-      }
-      .filter-bar {
-        justify-content: flex-start;
-      }
+      .site-title { font-size: 1.25rem; }
+      .site-tagline { display: none; }
+      .brand-mark { display: none; }
+      .nav-bar { grid-template-columns: 1fr auto; }
+      .title-center { text-align: left; }
+      .filter-wrapper { justify-content: flex-start; }
     }
   </style>
 </head>
 <body>
 
-  <!-- HEADER FISSO CON BLUR -->
+  <!-- HEADER -->
   <header>
-    <div class="container nav-wrapper">
-      
-      <!-- Spazio vuoto a sinistra per bilanciare la griglia su desktop -->
-      <div></div>
+    <div class="container nav-bar">
+      <!-- Monogramma/Brand a sinistra -->
+      <a href="#" class="brand-mark">PRISTERÀ<span>.</span></a>
 
-      <!-- TITOLO CENTRALE -->
-      <div class="title-area">
-        <h1 class="brand-title">LOGBOOK</h1>
-        <p class="brand-subtitle">Tech, Filmmaking & Pensieri</p>
+      <!-- Titolo centrale -->
+      <div class="title-center">
+        <h1 class="site-title">LOGBOOK</h1>
+        <p class="site-tagline">Tech, Filmmaking & Pensieri</p>
       </div>
 
-      <!-- MENU PROFILO / CV / PORTFOLIO -->
-      <div class="profile-section">
-        <button class="profile-btn" id="menuBtn" aria-expanded="false" aria-label="Menu profilo">
-          <div class="avatar-icon">N</div>
+      <!-- Menu Profilo a destra -->
+      <div class="profile-wrap">
+        <button class="profile-toggle" id="menuBtn" aria-expanded="false" aria-label="Apri menu">
+          <div class="avatar-badge">N</div>
           <span>Info</span>
-          <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="6 9 12 15 18 9"></polyline>
           </svg>
         </button>
 
-        <div class="dropdown" id="dropdownMenu">
-          <a href="https://portfolio-url.github.io" target="_blank" rel="noopener" class="dropdown-link">
-            <span class="title">Portfolio Progetti ↗</span>
-            <span class="hint">Hardware, CAD & Regia</span>
+        <div class="dropdown-box" id="menuBox">
+          <a href="https://portfolio-url.github.io" target="_blank" rel="noopener" class="dropdown-item">
+            <span class="item-title">Portfolio ↗</span>
+            <span class="subtext">Progetti Tech & Video</span>
           </a>
-          <a href="https://cv-url.github.io" target="_blank" rel="noopener" class="dropdown-link">
-            <span class="title">Curriculum Vitae ↗</span>
-            <span class="hint">Competenze ed esperienze</span>
+          <a href="https://cv-url.github.io" target="_blank" rel="noopener" class="dropdown-item">
+            <span class="item-title">Curriculum Vitae ↗</span>
+            <span class="subtext">Esperienze & Competenze</span>
           </a>
         </div>
       </div>
-
     </div>
   </header>
 
+  <!-- CONTENITORE PRINCIPALE -->
   <div class="container">
     
-    <!-- BARRA CATEGORIE FILTRABILE -->
-    <nav class="filter-bar" aria-label="Filtra categorie">
-      <button class="filter-btn active" data-category="all">Tutti</button>
-      <button class="filter-btn" data-category="tech">Tech & Hardware</button>
-      <button class="filter-btn" data-category="cinema">Cinema & Analisi</button>
-      <button class="filter-btn" data-category="making-of">Making Of</button>
-      <button class="filter-btn" data-category="opinioni">Riflessioni</button>
+    <!-- BARRA CATEGORIE -->
+    <nav class="filter-wrapper" aria-label="Filtri articoli">
+      <button class="filter-btn active" data-filter="all">Tutti</button>
+      <button class="filter-btn" data-filter="tech">Tech & Hardware</button>
+      <button class="filter-btn" data-filter="cinema">Cinema & Video</button>
+      <button class="filter-btn" data-filter="making-of">Making Of</button>
+      <button class="filter-btn" data-filter="riflessioni">Riflessioni</button>
     </nav>
 
     <!-- GRIGLIA DEGLI ARTICOLI -->
-    <main class="articles-grid" id="articlesGrid">
+    <main class="grid" id="postsGrid">
 
-      <!-- Articolo 1: Making Of Video con Embed YouTube -->
+      <!-- Card 1: Video / Making Of -->
       <article class="card" data-category="making-of">
-        <div class="card-media">
+        <div class="card-cover">
           <iframe 
             src="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ" 
             title="Video embed" 
             allowfullscreen 
             loading="lazy">
           </iframe>
-          <div class="media-badge">▶ Video Log</div>
+          <div class="tag-badge">▶ Video Log</div>
         </div>
-        <div class="card-body">
-          <div class="card-meta">
-            <span class="category-tag">Making Of</span>
-            <time class="card-date">Marzo 2026</time>
+        <div class="card-content">
+          <div class="meta-line">
+            <span class="cat-name">Making Of</span>
+            <span class="post-date">Marzo 2026</span>
           </div>
-          <h2 class="card-title">Color grading cinematografico: illuminazione e post in DaVinci</h2>
-          <p class="card-excerpt">Come gestire curve logaritmiche, color palette calde e impostazioni ottiche su mirrorless senza impazzire in timeline.</p>
-          <div class="card-footer">
-            <span class="read-more">Approfondisci &rarr;</span>
-          </div>
+          <h2 class="post-title">Color grading cinematografico: illuminazione e post in DaVinci</h2>
+          <p class="post-excerpt">Gestire profili Log, curve di contrasto calibrate e resa cromatica per cortometraggi e clip video.</p>
+          <div class="card-action">Guarda e leggi &rarr;</div>
         </div>
       </article>
 
-      <!-- Articolo 2: Hardware / Prototipazione -->
+      <!-- Card 2: Tech / Prototipazione -->
       <article class="card" data-category="tech">
-        <div class="card-media">
-          <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=700&q=80" alt="Circuito elettronico microcontrollore" loading="lazy">
-          <div class="media-badge">Devlog</div>
+        <div class="card-cover">
+          <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80" alt="Circuito stampato" loading="lazy">
+          <div class="tag-badge">Devlog</div>
         </div>
-        <div class="card-body">
-          <div class="card-meta">
-            <span class="category-tag">Tech & Hardware</span>
-            <time class="card-date">Febbraio 2026</time>
+        <div class="card-content">
+          <div class="meta-line">
+            <span class="cat-name">Tech & Hardware</span>
+            <span class="post-date">Febbraio 2026</span>
           </div>
-          <h2 class="card-title">Dietro le quinte del firmware: interrupt, bus SPI e FreeCAD</h2>
-          <p class="card-excerpt">La cronaca delle nottate passate a debuggare i segnali elettrici e a modellare scocche millimetriche in PLA.</p>
-          <div class="card-footer">
-            <span class="read-more">Leggi il log &rarr;</span>
-          </div>
+          <h2 class="post-title">Dietro le quinte del firmware: interrupt, bus SPI e FreeCAD</h2>
+          <p class="post-excerpt">Progettazione integrata tra modellazione scocche millimetriche in PLA e codice a basso livello.</p>
+          <div class="card-action">Leggi l'articolo &rarr;</div>
         </div>
       </article>
 
-      <!-- Articolo 3: Cinema & Serie TV -->
+      <!-- Card 3: Cinema / Opinione -->
       <article class="card" data-category="cinema">
-        <div class="card-media">
-          <img src="https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&w=700&q=80" alt="Proiettore cinema" loading="lazy">
-          <div class="media-badge">7 min read</div>
+        <div class="card-cover">
+          <img src="https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&w=800&q=80" alt="Proiettore cinematografico" loading="lazy">
+          <div class="tag-badge">Analisi</div>
         </div>
-        <div class="card-body">
-          <div class="card-meta">
-            <span class="category-tag">Cinema & Analisi</span>
-            <time class="card-date">Gennaio 2026</time>
+        <div class="card-content">
+          <div class="meta-line">
+            <span class="cat-name">Cinema & Video</span>
+            <span class="post-date">Gennaio 2026</span>
           </div>
-          <h2 class="card-title">Perché la fotografia di Denis Villeneuve funziona così bene</h2>
-          <p class="card-excerpt">Analisi dell'uso della scala monumentale, lenti anamorfiche e sound design nei recenti capolavori di fantascienza.</p>
-          <div class="card-footer">
-            <span class="read-more">Leggi saggio &rarr;</span>
-          </div>
+          <h2 class="post-title">Composizione dell'inquadratura e lenti anamorfiche nel cinema sci-fi</h2>
+          <p class="post-excerpt">Perché la scala visiva monumentale e la gestione delle luci pratiche cambiano completamente l'immersione nello spettatore.</p>
+          <div class="card-action">Leggi saggio &rarr;</div>
         </div>
       </article>
 
@@ -506,35 +469,33 @@
   </div>
 
   <script>
-    // 1. Gestione Dropdown Menu
+    // Toggle menu profilo
     const menuBtn = document.getElementById('menuBtn');
-    const dropdownMenu = document.getElementById('dropdownMenu');
+    const menuBox = document.getElementById('menuBox');
 
     menuBtn.addEventListener('click', (e) => {
       e.stopPropagation();
-      const isOpen = dropdownMenu.classList.toggle('active');
-      menuBtn.setAttribute('aria-expanded', isOpen);
+      const open = menuBox.classList.toggle('open');
+      menuBtn.setAttribute('aria-expanded', open);
     });
 
     document.addEventListener('click', (e) => {
-      if (!menuBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
-        dropdownMenu.classList.remove('active');
+      if (!menuBtn.contains(e.target) && !menuBox.contains(e.target)) {
+        menuBox.classList.remove('open');
         menuBtn.setAttribute('aria-expanded', 'false');
       }
     });
 
-    // 2. Filtro dinamico per Categoria
-    const filterButtons = document.querySelectorAll('.filter-btn');
-    const cards = document.querySelectorAll('.articles-grid .card');
+    // Filtro categorie live
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const cards = document.querySelectorAll('.grid .card');
 
-    filterButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        // Toggle classe active
-        filterButtons.forEach(btn => btn.classList.remove('active'));
-        button.classList.add('active');
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
 
-        const filter = button.getAttribute('data-category');
-
+        const filter = btn.getAttribute('data-filter');
         cards.forEach(card => {
           if (filter === 'all' || card.getAttribute('data-category') === filter) {
             card.style.display = 'flex';
