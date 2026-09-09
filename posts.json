@@ -1,14 +1,5 @@
 [
   {
-    "id": 1,
-    "title": "Color grading cinematografico: illuminazione e post",
-    "category": "making-of",
-    "type": "video",
-    "mediaUrl": "https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ",
-    "date": "Marzo 2026",
-    "content": "Gestire profili Log, curve di contrasto calibrate e resa cromatica per cortometraggi e clip video."
-  },
-  {
     "id": 2,
     "title": "Dietro le quinte del firmware: interrupt, bus SPI e FreeCAD",
     "category": "tech",
