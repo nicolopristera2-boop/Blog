@@ -32,7 +32,7 @@
 
     .container { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; }
 
-    /* BARRA SEGRETA ADMIN (Invisibile di default) */
+    /* BARRA SEGRETA ADMIN (Visibile solo in modalità autore) */
     .admin-bar {
       display: none;
       background: #1e1b4b;
@@ -50,7 +50,7 @@
       background: var(--accent);
       border: none;
       color: #fff;
-      padding: 0.3rem 0.7rem;
+      padding: 0.35rem 0.8rem;
       border-radius: 6px;
       cursor: pointer;
       font-weight: 600;
@@ -60,7 +60,7 @@
       background: transparent;
       border: 1px solid rgba(255,255,255,0.2);
       color: #cbd5e1;
-      padding: 0.3rem 0.6rem;
+      padding: 0.35rem 0.7rem;
       border-radius: 6px;
       cursor: pointer;
       font-size: 0.75rem;
@@ -224,7 +224,7 @@
 </head>
 <body>
 
-  <!-- BARRA DI STATO ADMIN (Visibile solo quando sbloccata) -->
+  <!-- BARRA DI STATO ADMIN -->
   <div class="admin-bar" id="adminBar">
     <span>🔒 <strong>Modalità Autore Attiva</strong></span>
     <div class="admin-bar-actions">
@@ -235,7 +235,7 @@
 
   <div class="container">
     <header class="top-bar">
-      <a href="#" class="brand">NICOLÒ<span>.</span></a>
+      <a href="#" class="brand">PRISTERÀ<span>.</span></a>
 
       <div class="menu-container">
         <button class="menu-trigger" id="menuBtn">
@@ -271,7 +271,7 @@
     <main class="grid" id="postsContainer"></main>
   </div>
 
-  <!-- MODAL EDITOR NUOVO ARTICOLO -->
+  <!-- MODAL NUOVO ARTICOLO -->
   <div class="modal-backdrop" id="editorModal">
     <div class="modal-window">
       <h2 class="modal-title">Nuovo Articolo</h2>
@@ -320,25 +320,30 @@
       }
     }
 
-    // SCORCIATOIA DA TASTIERA SEGRETA: CTRL + SHIFT + A (o CMD + SHIFT + A)
-    window.addEventListener('keydown', (e) => {
-      if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'A' || e.key === 'a')) {
+    // SCORCIATOIA DA TASTIERA SEGRETA: CTRL + ALT + A oppure CTRL + SHIFT + A
+    document.addEventListener('keydown', (e) => {
+      const isCtrlOrCmd = e.ctrlKey || e.metaKey;
+      const isTriggerKey = e.code === 'KeyA';
+
+      if (isCtrlOrCmd && (e.altKey || e.shiftKey) && isTriggerKey) {
         e.preventDefault();
+        e.stopPropagation();
+
         const currentToken = localStorage.getItem('gh_blog_token');
         if (currentToken) {
-          alert("Sei già loggato come autore.");
+          alert("Sei già autenticato come autore.");
         } else {
           const pass = prompt("Area Autore. Inserisci il tuo GitHub Personal Access Token:");
           if (pass && pass.trim().startsWith('ghp_')) {
             localStorage.setItem('gh_blog_token', pass.trim());
             checkAdminStatus();
-            alert("Accesso eseguito con successo!");
+            alert("Accesso autorizzato!");
           } else if (pass) {
-            alert("Token non valido.");
+            alert("Token non valido (deve iniziare con ghp_).");
           }
         }
       }
-    });
+    }, true);
 
     // Logout
     document.getElementById('logoutBtn').addEventListener('click', () => {
@@ -389,7 +394,7 @@
         card.className = 'card';
         card.setAttribute('data-category', p.category);
         card.innerHTML = `
-          <button class="btn-delete-post" onclick="deletePost(${p.id})">🗑️ Elimina</button>
+          <button class="btn-delete-post" onclick="deletePost('${p.id}')">🗑️ Elimina</button>
           <div class="card-media">
             ${formatMediaEmbed(p.mediaUrl, p.type)}
           </div>
@@ -429,7 +434,7 @@
       btn.disabled = true;
 
       try {
-        const fileRes = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`, {
+        const fileRes = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}?ref=main`, {
           headers: { Authorization: `token ${token}` }
         });
         const fileData = await fileRes.json();
@@ -438,15 +443,17 @@
         const now = new Date();
         const dateStr = now.toLocaleDateString('it-IT', { month: 'long', year: 'numeric' });
 
-        posts.unshift({
-          id: Date.now(),
+        const newPost = {
+          id: String(Date.now()),
           title,
           category,
           type,
           mediaUrl,
           date: dateStr.charAt(0).toUpperCase() + dateStr.slice(1),
           content
-        });
+        };
+
+        posts.unshift(newPost);
 
         const updateRes = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`, {
           method: 'PUT',
@@ -458,14 +465,15 @@
           })
         });
 
-        if (!updateRes.ok) throw new Error("Errore durante il salvataggio.");
+        if (!updateRes.ok) throw new Error("Errore durante il salvataggio su GitHub.");
 
         alert("Articolo aggiunto!");
         modal.classList.remove('show');
         document.getElementById('postTitle').value = '';
         document.getElementById('postMediaUrl').value = '';
         document.getElementById('postContent').value = '';
-        loadPosts();
+        allPosts = posts;
+        renderPosts('all');
       } catch (err) {
         alert("Errore: " + err.message);
       } finally {
@@ -475,86 +483,52 @@
     });
 
     // CANCELLAZIONE ARTICOLO
-    // CANCELLAZIONE ARTICOLO CORRETTA
-async function deletePost(id) {
-  const token = localStorage.getItem('gh_blog_token');
-  if (!token) return alert("Non autorizzato. Premi CTRL+SHIFT+A per autenticarti.");
+    async function deletePost(id) {
+      const token = localStorage.getItem('gh_blog_token');
+      if (!token) return alert("Non autorizzato.");
 
-  if (!confirm("Vuoi davvero eliminare definitivamente questo articolo?")) return;
+      if (!confirm("Vuoi davvero eliminare definitivamente questo articolo?")) return;
 
-  try {
-    // 1. Recupera l'ultima versione del file direttamente da GitHub API (bypassa la cache del browser)
-    const fileRes = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}?ref=main`, {
-      headers: { 
-        Authorization: `token ${token}`,
-        'Accept': 'application/vnd.github.v3+json'
-      }
-    });
-
-    if (!fileRes.ok) throw new Error("Impossibile recuperare il file posts.json da GitHub.");
-
-    const fileData = await fileRes.json();
-    let posts = JSON.parse(decodeURIComponent(escape(atob(fileData.content))));
-
-    // 2. Filtro flessibile (converte entrambi a stringa per evitare mismatch numero/stringa)
-    const originalLength = posts.length;
-    posts = posts.filter(item => String(item.id) !== String(id));
-
-    if (posts.length === originalLength) {
-      alert("Post non trovato nell'elenco su GitHub.");
-      return;
-    }
-
-    // 3. Esegue il commit della nuova lista senza il post
-    const updateRes = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`, {
-      method: 'PUT',
-      headers: { 
-        Authorization: `token ${token}`, 
-        'Content-Type': 'application/json' 
-      },
-      body: JSON.stringify({
-        message: `Rimosso post ID: ${id}`,
-        content: btoa(unescape(encodeURIComponent(JSON.stringify(posts, null, 2)))),
-        sha: fileData.sha
-      })
-    });
-
-    if (!updateRes.ok) throw new Error("Errore durante l'aggiornamento su GitHub.");
-
-    // 4. Aggiorna immediatamente l'interfaccia locale senza aspettare la CDN di GitHub
-    allPosts = posts;
-    renderPosts('all');
-    alert("Articolo rimosso con successo!");
-
-  } catch (err) {
-    alert("Errore eliminazione: " + err.message);
-  }
-}
-    
       try {
-        const fileRes = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`, {
-          headers: { Authorization: `token ${token}` }
+        const fileRes = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}?ref=main`, {
+          headers: { 
+            Authorization: `token ${token}`,
+            'Accept': 'application/vnd.github.v3+json'
+          }
         });
+
+        if (!fileRes.ok) throw new Error("Impossibile recuperare il file posts.json da GitHub.");
+
         const fileData = await fileRes.json();
         let posts = JSON.parse(decodeURIComponent(escape(atob(fileData.content))));
 
-        // Filtra via l'articolo con questo ID
-        posts = posts.filter(item => item.id !== id);
+        const originalLength = posts.length;
+        posts = posts.filter(item => String(item.id) !== String(id));
+
+        if (posts.length === originalLength) {
+          alert("Post non trovato nell'elenco su GitHub.");
+          return;
+        }
 
         const updateRes = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`, {
           method: 'PUT',
-          headers: { Authorization: `token ${token}`, 'Content-Type': 'application/json' },
+          headers: { 
+            Authorization: `token ${token}`, 
+            'Content-Type': 'application/json' 
+          },
           body: JSON.stringify({
-            message: `Eliminato post ID: ${id}`,
+            message: `Rimosso post ID: ${id}`,
             content: btoa(unescape(encodeURIComponent(JSON.stringify(posts, null, 2)))),
             sha: fileData.sha
           })
         });
 
-        if (!updateRes.ok) throw new Error("Errore durante la cancellazione.");
+        if (!updateRes.ok) throw new Error("Errore durante l'aggiornamento su GitHub.");
 
+        allPosts = posts;
+        renderPosts('all');
         alert("Articolo rimosso con successo!");
-        loadPosts();
+
       } catch (err) {
         alert("Errore eliminazione: " + err.message);
       }
@@ -570,7 +544,7 @@ async function deletePost(id) {
       });
     });
 
-    // Menu Link
+    // Menu Dropdown
     const menuBtn = document.getElementById('menuBtn');
     const menuDropdown = document.getElementById('menuDropdown');
     menuBtn.addEventListener('click', (e) => {
@@ -579,7 +553,7 @@ async function deletePost(id) {
     });
     document.addEventListener('click', () => menuDropdown.classList.remove('show'));
 
-    // Init
+    // Inizializza
     checkAdminStatus();
     loadPosts();
   </script>
