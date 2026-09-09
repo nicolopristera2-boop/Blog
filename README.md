@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LOGBOOK — Tech, Video & Notes</title>
+  <title>LOGBOOK</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,14 +12,12 @@
   <style>
     :root {
       --bg: #0b0f17;
-      --card-bg: rgba(18, 24, 38, 0.75);
-      --card-border: rgba(255, 255, 255, 0.07);
-      --card-border-hover: rgba(249, 115, 22, 0.45);
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
+      --card-bg: #131926;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(249, 115, 22, 0.4);
+      --text: #f8fafc;
+      --muted: #94a3b8;
       --accent: #f97316;
-      --accent-glow: rgba(249, 115, 22, 0.15);
-      --badge-bg: rgba(15, 23, 42, 0.85);
     }
 
     * {
@@ -30,236 +28,198 @@
 
     body {
       background-color: var(--bg);
-      background-image: 
-        radial-gradient(ellipse 60% 40% at 50% 0%, rgba(249, 115, 22, 0.07), transparent 70%),
-        radial-gradient(circle at 100% 100%, rgba(56, 189, 248, 0.03), transparent 50%);
-      background-attachment: fixed;
-      color: var(--text-main);
+      color: var(--text);
       font-family: 'Inter', system-ui, sans-serif;
       line-height: 1.5;
       padding-bottom: 5rem;
     }
 
     .container {
-      max-width: 1120px;
+      max-width: 1100px;
       margin: 0 auto;
       padding: 0 1.5rem;
     }
 
-    /* HEADER */
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      background: rgba(11, 15, 23, 0.82);
-      border-bottom: 1px solid var(--card-border);
-      padding: 1rem 0;
-    }
-
-    .nav-bar {
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
+    /* TOP BAR: BRAND A SX, MENU A DX */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
       align-items: center;
+      padding: 1.25rem 0;
+      border-bottom: 1px solid var(--border);
     }
 
-    .brand-mark {
+    .brand {
       font-family: 'Syne', sans-serif;
       font-weight: 800;
-      font-size: 0.95rem;
+      font-size: 1rem;
       letter-spacing: 1px;
-      color: var(--text-muted);
+      color: var(--text);
       text-decoration: none;
-      transition: color 0.2s;
     }
-    .brand-mark:hover { color: var(--text-main); }
-    .brand-mark span { color: var(--accent); }
+    .brand span { color: var(--accent); }
 
-    .title-center {
-      text-align: center;
-    }
-
-    .site-title {
-      font-family: 'Syne', sans-serif;
-      font-size: 1.5rem;
-      font-weight: 800;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      background: linear-gradient(180deg, #ffffff 30%, #94a3b8 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .site-tagline {
-      font-size: 0.72rem;
-      color: var(--text-muted);
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      margin-top: 2px;
-    }
-
-    /* MENU PROFILO (CV / PORTFOLIO) */
-    .profile-wrap {
-      justify-self: end;
+    /* MENU A TENDINA INFO/PORTFOLIO */
+    .menu-container {
       position: relative;
     }
 
-    .profile-toggle {
+    .menu-trigger {
       display: flex;
       align-items: center;
-      gap: 0.55rem;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid var(--card-border);
-      padding: 0.35rem 0.75rem 0.35rem 0.4rem;
+      gap: 0.5rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      padding: 0.4rem 0.8rem;
       border-radius: 999px;
-      color: var(--text-main);
+      color: var(--text);
       cursor: pointer;
       font-family: inherit;
       font-size: 0.85rem;
-      font-weight: 500;
-      transition: all 0.2s ease;
+      transition: all 0.2s;
     }
 
-    .profile-toggle:hover, .profile-toggle[aria-expanded="true"] {
+    .menu-trigger:hover {
       border-color: var(--accent);
-      background: rgba(255, 255, 255, 0.07);
     }
 
-    .avatar-badge {
-      width: 26px;
-      height: 26px;
+    .avatar {
+      width: 22px;
+      height: 22px;
       border-radius: 50%;
-      background: linear-gradient(135deg, var(--accent), #e11d48);
+      background: var(--accent);
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 700;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: #fff;
     }
 
-    .dropdown-box {
+    .dropdown {
       position: absolute;
       top: calc(100% + 8px);
       right: 0;
-      width: 230px;
-      background: #111726;
-      border: 1px solid var(--card-border);
+      width: 210px;
+      background: #161e2e;
+      border: 1px solid var(--border);
       border-radius: 12px;
       padding: 0.4rem;
-      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.55);
-      opacity: 0;
-      visibility: hidden;
-      transform: translateY(-6px);
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      display: none;
+      z-index: 50;
     }
 
-    .dropdown-box.open {
-      opacity: 1;
-      visibility: visible;
-      transform: translateY(0);
-    }
+    .dropdown.show { display: block; }
 
-    .dropdown-item {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-      padding: 0.65rem 0.85rem;
-      border-radius: 8px;
+    .dropdown a {
+      display: block;
+      padding: 0.6rem 0.8rem;
+      color: var(--text);
       text-decoration: none;
-      color: var(--text-main);
       font-size: 0.85rem;
-      font-weight: 500;
+      border-radius: 8px;
       transition: background 0.15s;
     }
 
-    .dropdown-item .subtext {
-      font-size: 0.72rem;
-      color: var(--text-muted);
-      font-weight: 400;
-    }
-
-    .dropdown-item:hover {
-      background: rgba(255, 255, 255, 0.05);
-    }
-    .dropdown-item:hover .item-title {
+    .dropdown a:hover {
+      background: rgba(255, 255, 255, 0.08);
       color: var(--accent);
     }
 
-    /* FILTRI CATEGORIE */
-    .filter-wrapper {
+    .dropdown a small {
+      display: block;
+      color: var(--muted);
+      font-size: 0.72rem;
+      margin-top: 2px;
+    }
+
+    /* HERO CENTRALE */
+    .hero {
+      text-align: center;
+      padding: 3rem 0 2rem;
+    }
+
+    .main-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 800;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 0.4rem;
+    }
+
+    .subtitle {
+      font-size: 0.8rem;
+      color: var(--muted);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    /* FILTRI */
+    .filters {
       display: flex;
       justify-content: center;
       gap: 0.5rem;
-      padding: 2.2rem 0 1.8rem;
-      overflow-x: auto;
-      scrollbar-width: none;
+      flex-wrap: wrap;
+      margin-top: 2rem;
     }
-    .filter-wrapper::-webkit-scrollbar { display: none; }
 
     .filter-btn {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid var(--card-border);
-      color: var(--text-muted);
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
       padding: 0.4rem 1rem;
       border-radius: 999px;
-      font-size: 0.82rem;
-      font-family: inherit;
-      font-weight: 500;
+      font-size: 0.85rem;
       cursor: pointer;
-      white-space: nowrap;
-      transition: all 0.2s ease;
+      font-family: inherit;
+      transition: all 0.2s;
     }
 
     .filter-btn:hover {
-      color: var(--text-main);
+      color: var(--text);
       border-color: rgba(255, 255, 255, 0.2);
     }
 
     .filter-btn.active {
-      background: var(--text-main);
-      color: #0b0f17;
-      border-color: var(--text-main);
+      background: var(--text);
+      color: var(--bg);
+      border-color: var(--text);
       font-weight: 600;
     }
 
     /* GRIGLIA ARTICOLI */
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
-      gap: 1.75rem;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 2rem;
+      margin-top: 2.5rem;
     }
 
-    /* CARD DESIGN */
     .card {
       background: var(--card-bg);
-      border: 1px solid var(--card-border);
+      border: 1px solid var(--border);
       border-radius: 14px;
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      text-decoration: none;
-      color: inherit;
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: transform 0.2s, border-color 0.2s;
     }
 
     .card:hover {
       transform: translateY(-4px);
-      border-color: var(--card-border-hover);
-      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.5), 0 0 25px var(--accent-glow);
+      border-color: var(--border-hover);
     }
 
-    .card-cover {
+    .card-media {
       position: relative;
       width: 100%;
       padding-top: 56.25%; /* 16:9 */
-      background: #070a0e;
-      overflow: hidden;
+      background: #000;
     }
 
-    .card-cover iframe,
-    .card-cover img {
+    .card-media iframe, .card-media img {
       position: absolute;
       top: 0;
       left: 0;
@@ -267,240 +227,152 @@
       height: 100%;
       object-fit: cover;
       border: none;
-      transition: transform 0.4s ease;
     }
 
-    .card:hover .card-cover img {
-      transform: scale(1.03);
-    }
-
-    .tag-badge {
+    .badge {
       position: absolute;
       bottom: 10px;
       right: 10px;
-      background: var(--badge-bg);
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 0.22rem 0.55rem;
+      background: rgba(0, 0, 0, 0.8);
+      padding: 0.2rem 0.5rem;
       border-radius: 6px;
       font-size: 0.72rem;
       font-weight: 600;
-      color: var(--text-main);
-      z-index: 2;
     }
 
-    .card-content {
-      padding: 1.3rem;
+    .card-body {
+      padding: 1.25rem;
       display: flex;
       flex-direction: column;
       flex-grow: 1;
     }
 
-    .meta-line {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.75rem;
-      margin-bottom: 0.6rem;
-    }
-
-    .cat-name {
+    .card-category {
       color: var(--accent);
+      font-size: 0.75rem;
       font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      margin-bottom: 0.4rem;
     }
 
-    .post-date {
-      color: var(--text-muted);
-    }
-
-    .post-title {
+    .card-title {
       font-size: 1.15rem;
       font-weight: 600;
-      line-height: 1.4;
-      margin-bottom: 0.55rem;
-      color: var(--text-main);
-      transition: color 0.15s;
+      line-height: 1.35;
+      margin-bottom: 0.5rem;
     }
 
-    .card:hover .post-title {
-      color: var(--accent);
-    }
-
-    .post-excerpt {
+    .card-desc {
       font-size: 0.88rem;
-      color: var(--text-muted);
+      color: var(--muted);
       line-height: 1.5;
-      margin-bottom: 1.2rem;
       flex-grow: 1;
-    }
-
-    .card-action {
-      font-size: 0.8rem;
-      font-weight: 500;
-      color: var(--text-main);
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      padding-top: 0.7rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    @media (max-width: 640px) {
-      .site-title { font-size: 1.25rem; }
-      .site-tagline { display: none; }
-      .brand-mark { display: none; }
-      .nav-bar { grid-template-columns: 1fr auto; }
-      .title-center { text-align: left; }
-      .filter-wrapper { justify-content: flex-start; }
     }
   </style>
 </head>
 <body>
 
-  <!-- HEADER -->
-  <header>
-    <div class="container nav-bar">
-      <!-- Monogramma/Brand a sinistra -->
-      <a href="#" class="brand-mark">PRISTERÀ<span>.</span></a>
-
-      <!-- Titolo centrale -->
-      <div class="title-center">
-        <h1 class="site-title">LOGBOOK</h1>
-        <p class="site-tagline">Tech, Filmmaking & Pensieri</p>
-      </div>
-
-      <!-- Menu Profilo a destra -->
-      <div class="profile-wrap">
-        <button class="profile-toggle" id="menuBtn" aria-expanded="false" aria-label="Apri menu">
-          <div class="avatar-badge">N</div>
-          <span>Info</span>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="6 9 12 15 18 9"></polyline>
-          </svg>
-        </button>
-
-        <div class="dropdown-box" id="menuBox">
-          <a href="https://portfolio-url.github.io" target="_blank" rel="noopener" class="dropdown-item">
-            <span class="item-title">Portfolio ↗</span>
-            <span class="subtext">Progetti Tech & Video</span>
-          </a>
-          <a href="https://cv-url.github.io" target="_blank" rel="noopener" class="dropdown-item">
-            <span class="item-title">Curriculum Vitae ↗</span>
-            <span class="subtext">Esperienze & Competenze</span>
-          </a>
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <!-- CONTENITORE PRINCIPALE -->
   <div class="container">
     
-    <!-- BARRA CATEGORIE -->
-    <nav class="filter-wrapper" aria-label="Filtri articoli">
-      <button class="filter-btn active" data-filter="all">Tutti</button>
-      <button class="filter-btn" data-filter="tech">Tech & Hardware</button>
-      <button class="filter-btn" data-filter="cinema">Cinema & Video</button>
-      <button class="filter-btn" data-filter="making-of">Making Of</button>
-      <button class="filter-btn" data-filter="riflessioni">Riflessioni</button>
-    </nav>
+    <!-- LIVELLO 1: Barra superiore con Brand e Menu Esterno -->
+    <header class="top-bar">
+      <a href="#" class="brand">NICOLÒ<span>.</span></a>
 
-    <!-- GRIGLIA DEGLI ARTICOLI -->
-    <main class="grid" id="postsGrid">
+      <div class="menu-container">
+        <button class="menu-trigger" id="menuBtn">
+          <div class="avatar">N</div>
+          <span>Link</span>
+          ▾
+        </button>
+        <div class="dropdown" id="menuDropdown">
+          <a href="https://portfolio-tuosito.github.io" target="_blank">
+            Portfolio Progetti ↗
+            <small>Hardware, CAD & Regia</small>
+          </a>
+          <a href="https://cv-tuosito.github.io" target="_blank">
+            Curriculum Vitae ↗
+            <small>Esperienze e Formazione</small>
+          </a>
+        </div>
+      </div>
+    </header>
 
-      <!-- Card 1: Video / Making Of -->
+    <!-- LIVELLO 2: Hero centrale con Titolo e Filtri Categoria -->
+    <section class="hero">
+      <h1 class="main-title">LOGBOOK</h1>
+      <p class="subtitle">Tech, Filmmaking & Pensieri</p>
+
+      <div class="filters">
+        <button class="filter-btn active" data-cat="all">Tutti</button>
+        <button class="filter-btn" data-cat="tech">Tech & Hardware</button>
+        <button class="filter-btn" data-cat="cinema">Cinema & Video</button>
+        <button class="filter-btn" data-cat="making-of">Making Of</button>
+        <button class="filter-btn" data-cat="riflessioni">Riflessioni</button>
+      </div>
+    </section>
+
+    <!-- GRIGLIA ARTICOLI -->
+    <main class="grid">
+
+      <!-- Articolo Video -->
       <article class="card" data-category="making-of">
-        <div class="card-cover">
-          <iframe 
-            src="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ" 
-            title="Video embed" 
-            allowfullscreen 
-            loading="lazy">
-          </iframe>
-          <div class="tag-badge">▶ Video Log</div>
+        <div class="card-media">
+          <iframe src="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ" allowfullscreen></iframe>
+          <div class="badge">▶ Video Log</div>
         </div>
-        <div class="card-content">
-          <div class="meta-line">
-            <span class="cat-name">Making Of</span>
-            <span class="post-date">Marzo 2026</span>
-          </div>
-          <h2 class="post-title">Color grading cinematografico: illuminazione e post in DaVinci</h2>
-          <p class="post-excerpt">Gestire profili Log, curve di contrasto calibrate e resa cromatica per cortometraggi e clip video.</p>
-          <div class="card-action">Guarda e leggi &rarr;</div>
+        <div class="card-body">
+          <span class="card-category">Making Of</span>
+          <h2 class="card-title">Color grading cinematografico: illuminazione e post</h2>
+          <p class="card-desc">Gestire profili Log, contrasto e resa cromatica per cortometraggi e clip video.</p>
         </div>
       </article>
 
-      <!-- Card 2: Tech / Prototipazione -->
+      <!-- Articolo Tech -->
       <article class="card" data-category="tech">
-        <div class="card-cover">
-          <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80" alt="Circuito stampato" loading="lazy">
-          <div class="tag-badge">Devlog</div>
+        <div class="card-media">
+          <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80" alt="Circuito elettronico">
+          <div class="badge">Devlog</div>
         </div>
-        <div class="card-content">
-          <div class="meta-line">
-            <span class="cat-name">Tech & Hardware</span>
-            <span class="post-date">Febbraio 2026</span>
-          </div>
-          <h2 class="post-title">Dietro le quinte del firmware: interrupt, bus SPI e FreeCAD</h2>
-          <p class="post-excerpt">Progettazione integrata tra modellazione scocche millimetriche in PLA e codice a basso livello.</p>
-          <div class="card-action">Leggi l'articolo &rarr;</div>
-        </div>
-      </article>
-
-      <!-- Card 3: Cinema / Opinione -->
-      <article class="card" data-category="cinema">
-        <div class="card-cover">
-          <img src="https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&w=800&q=80" alt="Proiettore cinematografico" loading="lazy">
-          <div class="tag-badge">Analisi</div>
-        </div>
-        <div class="card-content">
-          <div class="meta-line">
-            <span class="cat-name">Cinema & Video</span>
-            <span class="post-date">Gennaio 2026</span>
-          </div>
-          <h2 class="post-title">Composizione dell'inquadratura e lenti anamorfiche nel cinema sci-fi</h2>
-          <p class="post-excerpt">Perché la scala visiva monumentale e la gestione delle luci pratiche cambiano completamente l'immersione nello spettatore.</p>
-          <div class="card-action">Leggi saggio &rarr;</div>
+        <div class="card-body">
+          <span class="card-category">Tech & Hardware</span>
+          <h2 class="card-title">Firmware a basso livello e modellazione CAD</h2>
+          <p class="card-desc">Dalla programmazione di microcontrollori alla progettazione di componenti 3D su misura.</p>
         </div>
       </article>
 
     </main>
+
   </div>
 
   <script>
-    // Toggle menu profilo
-    const menuBtn = document.getElementById('menuBtn');
-    const menuBox = document.getElementById('menuBox');
+    // Menu a tendina
+    const btn = document.getElementById('menuBtn');
+    const dropdown = document.getElementById('menuDropdown');
 
-    menuBtn.addEventListener('click', (e) => {
+    btn.addEventListener('click', (e) => {
       e.stopPropagation();
-      const open = menuBox.classList.toggle('open');
-      menuBtn.setAttribute('aria-expanded', open);
+      dropdown.classList.toggle('show');
     });
 
-    document.addEventListener('click', (e) => {
-      if (!menuBtn.contains(e.target) && !menuBox.contains(e.target)) {
-        menuBox.classList.remove('open');
-        menuBtn.setAttribute('aria-expanded', 'false');
-      }
+    document.addEventListener('click', () => {
+      dropdown.classList.remove('show');
     });
 
-    // Filtro categorie live
+    // Filtri categorie
     const filterBtns = document.querySelectorAll('.filter-btn');
-    const cards = document.querySelectorAll('.grid .card');
+    const cards = document.querySelectorAll('.card');
 
-    filterBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        filterBtns.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
+    filterBtns.forEach(b => {
+      b.addEventListener('click', () => {
+        filterBtns.forEach(x => x.classList.remove('active'));
+        b.classList.add('active');
 
-        const filter = btn.getAttribute('data-filter');
-        cards.forEach(card => {
-          if (filter === 'all' || card.getAttribute('data-category') === filter) {
-            card.style.display = 'flex';
+        const cat = b.getAttribute('data-cat');
+        cards.forEach(c => {
+          if (cat === 'all' || c.getAttribute('data-category') === cat) {
+            c.style.display = 'flex';
           } else {
-            card.style.display = 'none';
+            c.style.display = 'none';
           }
         });
       });
